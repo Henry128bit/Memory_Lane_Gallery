@@ -14,11 +14,14 @@ window.onmousemove = e => {
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
 
-    const percentage = (mouseDelta / maxDelta) * 100;
+    const percentage = (mouseDelta / maxDelta) * -100;
+console.log(mouseDelta, maxDelta, percentage);
 
-    // track.dataset.percentage = nextPercentage;
-
-    track.style.transform = `translate(-${percentage}%, -50%)`;
+    if (percentage <= 0 && percentage >= -100 ) {
+        track.style.transform = `translate(${percentage}%, -50%)`;
+    } else {
+        // track.dataset.percentage = nextPercentage;
+    }
 }
 
 
