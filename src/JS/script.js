@@ -1,50 +1,72 @@
 const track = document.querySelector('.container');
 
-window.onmousedown = e => {
+// wheel
+const page = document.querySelector('.page');
+let x = 0;
+
+const handleOnDown = e => {
     track.dataset.mouseDownAt = e.clientX;
 }
 
-window.onmouseup = () => {
+const handleOnUp = () => {
     track.dataset.mouseDownAt = "0";
+    track.dataset.prevPercentage = track.dataset.percentage;
 }
 
-window.onmousemove = e => {
+const handleOnMove = e => {
     if (track.dataset.mouseDownAt === "0") return
 
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
 
-    const percentage = (mouseDelta / maxDelta) * -100;
-console.log(mouseDelta, maxDelta, percentage);
+    const percentage = (mouseDelta / maxDelta) * -100,
+          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -90);
 
-    if (percentage <= 0 && percentage >= -100 ) {
-        track.style.transform = `translate(${percentage}%, -50%)`;
-    } else {
-        // track.dataset.percentage = nextPercentage;
-    }
+    track.dataset.percentage = nextPercentage;
+
+    track.animate({
+        transform: `translate(${nextPercentage}%, -50%)`
+      }, { duration: 1200, fill: "forwards" });
+
+    for(const image of track.getElementsByClassName("img")) {
+        image.animate({
+          objectPosition: `${100 + nextPercentage}% 50%`
+        }, { duration: 1200, fill: "forwards" });
+      }
 }
 
+window.onmousedown = e => handleOnDown(e);
+
+window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+window.onmouseup = e => handleOnUp(e);
+
+window.ontouchend = e => handleOnUp(e.touches[0]);
+
+window.onmousemove = e => handleOnMove(e);
+
+window.ontouchmove = e => handleOnMove(e.touches[0]);
 
 
-// window.onmousedown = e => {
-//     track.dataset.moudeDownAt = e.clientX;
-// }
+// wheel
 
-// window.onmousemove = e => {
-//     if (track.dataset.moudeDownAt === '0') return
+page.addEventListener('wheel', function(event) {
 
-//     const mouseDelta = parseFloat(track.dataset.moudeDownAt) - e.clientX,
-//           maxDelta = window.innerWidth / 2;
+    if (event.deltaY > 0) {
+        x = Math.max(Math.min((x -= 4), 0), -90);
+    } else if (event.deltaY < 0) {
+        x = Math.max(Math.min((x += 4), 0), -90);
+    }
 
-//     const percentage = (mouseDelta / maxDelta) * 100,
-//           nextPercentage = parseFloat(track.dataset.prevPercentage) + percentage;
+    console.log(x);
+    track.animate({
+        transform: `translate(${x}%, -50%)`
+      }, { duration: 1200, fill: "forwards" });
 
-//     track.dataset.percentage = nextPercentage;
-
-//     track.style.transform = `translate(-${nextPercentage}%, -50%)`;
-// }
-
-// window.mouseup = () => {
-//     track.dataset.moudeDownAt = "0";
-//     track.dataset.prevPercentage = track.dataset.percentage;
-// }
+    for(const image of track.getElementsByClassName("img")) {
+        image.animate({
+          objectPosition: `${100 + x}% 50%`
+        }, { duration: 1200, fill: "forwards" });
+      }
+});

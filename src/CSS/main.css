@@ -21,7 +21,7 @@ html {
 .header {
     display: flex;
     justify-content: center;
-    padding: 30px 0;
+    padding: 40px 0;
 }
 
 .navbar-link {
@@ -31,23 +31,23 @@ html {
 }
 
 .navbar-link:last-child {
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 /* MAIN */
 .container {
     display: flex;
-    gap: 4vmin;
+    gap: 3vmin;
 
     position: absolute;
-    left: 50%;
+    left: 40%;
     top: 50%;
-    transform: translate(-100%, -50%);
+    transform: translate(0%, -50%);
 }
 
 .img {
-    width: 40vmin;
-    height: 56vmin;
+    width: 32vmin;
+    height: 46vmin;
     object-fit: cover;
-    object-position: center;
+    object-position: 100% center;
 }
